@@ -22,7 +22,9 @@ namespace Webdefinitivo.Controllers
         // GET: Socios
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Socio.ToListAsync());
+            List<Socio> socios = new List<Socio>();
+            socios = _context.Socio.ToList();
+            return View(socios);
         }
 
         // GET: Socios/Details/5
@@ -86,34 +88,21 @@ namespace Webdefinitivo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Cedula,Nombre,Apellido,Direccion,Estado")] Socio socio)
+        public async Task<IActionResult> Edit(string id,Socio socio)
         {
             if (id != socio.Cedula)
+                return RedirectToAction("Index");
+            try
             {
-                return NotFound();
+                _context.Update(socio);
+                _context.SaveChanges();
             }
+            catch (Exception)
+            {
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(socio);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SocioExists(socio.Cedula))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(socio);
             }
-            return View(socio);
+            return RedirectToAction("Index");
         }
 
         // GET: Socios/Delete/5
@@ -148,6 +137,42 @@ namespace Webdefinitivo.Controllers
         private bool SocioExists(string id)
         {
             return _context.Socio.Any(e => e.Cedula == id);
+        }
+        public IActionResult Desactivar(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction("Index");
+            Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
+            try
+            {
+                socio.Estado = 0;
+                _context.Update(socio);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
+        public IActionResult Activar(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return RedirectToAction("Index");
+            Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
+            try
+            {
+                socio.Estado = 1;
+                _context.Update(socio);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
