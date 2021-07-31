@@ -20,29 +20,18 @@ namespace Webdefinitivo.Controllers
         }
 
         // GET: Socios
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<Socio> socios = new List<Socio>();
-            socios = _context.Socio.ToList();
-            return View(socios);
+            List<Socio> lissocios = new List<Socio>();
+            lissocios = _context.Socio.ToList();
+            return View(lissocios);
         }
 
         // GET: Socios/Details/5
-        public async Task<IActionResult> Details(string id)
+        public IActionResult Details(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return NotFound();
-            }
-
-            var socio = await _context.Socio
-                .FirstOrDefaultAsync(m => m.Cedula == id);
-            if (socio == null)
-            {
-                return NotFound();
-            }
-
-            return View(socio);
+            Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
+            return View(socio);        
         }
 
         // GET: Socios/Create
@@ -56,15 +45,20 @@ namespace Webdefinitivo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Cedula,Nombre,Apellido,Direccion,Estado")] Socio socio)
+        public IActionResult Create(Socio socio)
         {
-            if (ModelState.IsValid)
+            try
             {
+                socio.Estado = 1;
                 _context.Add(socio);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return View(socio);
+            catch (Exception ex)
+            {
+                return View(socio);
+            }
+
         }
 
         // GET: Socios/Edit/5
@@ -88,7 +82,7 @@ namespace Webdefinitivo.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id,Socio socio)
+        public IActionResult Edit(string id, Socio socio)
         {
             if (id != socio.Cedula)
                 return RedirectToAction("Index");

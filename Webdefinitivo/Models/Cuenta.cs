@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Webdefinitivo.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
-
-namespace Webdefinitivo.ModelosNuevos
+namespace Webdefinitivo.Models
 {
-    public partial class Cuenta
+    public class Cuenta
     {
         public string Numero { get; set; }
         public string SaldoTotal { get; set; }

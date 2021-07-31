@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Webdefinitivo.Models.Socio>
+﻿@model List<Webdefinitivo.Models.Socio>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,16 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Cedula)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Apellido)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Direccion)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Apellido)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Estado)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Direccion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Estado)
             </th>
             <th></th>
         </tr>
@@ -30,6 +33,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cedula)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
@@ -40,7 +46,14 @@
                 @Html.DisplayFor(modelItem => item.Direccion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Estado)
+                @if (item.Estado == 1)
+                {
+                    <label>Activado</label>
+                }
+                else
+                {
+                    <label>Desactivado</label>
+                }
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id = item.Cedula }, new

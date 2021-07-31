@@ -31,8 +31,15 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Estado)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Estado)
+        <dd class="col-sm-10">
+            @if (Model.Estado == 1)
+            {
+                <label>Activado</label>
+            }
+            else
+            {
+                <label>Desactivado</label>
+            }
         </dd>
     </dl>
 </div>
