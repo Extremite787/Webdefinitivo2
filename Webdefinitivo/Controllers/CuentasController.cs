@@ -20,28 +20,17 @@ namespace Webdefinitivo.Controllers
         }
 
         // GET: Cuentas
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.Cuenta.Include(c => c.CodigoSocioNavigation);
-            return View(await applicationDbContext.ToListAsync());
+            List<Cuenta> litCuenta = new List<Cuenta>();
+            litCuenta = _context.Cuenta.ToList();
+            return View(litCuenta);
         }
 
         // GET: Cuentas/Details/5
-        public async Task<IActionResult> Details(string id)
+        public IActionResult Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cuenta = await _context.Cuenta
-                .Include(c => c.CodigoSocioNavigation)
-                .FirstOrDefaultAsync(m => m.Numero == id);
-            if (cuenta == null)
-            {
-                return NotFound();
-            }
-
+            Cuenta cuenta = _context.Cuenta.Where(x => x.Numero == id).FirstOrDefault();
             return View(cuenta);
         }
 
@@ -53,42 +42,33 @@ namespace Webdefinitivo.Controllers
         }
 
         // POST: Cuentas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Numero,SaldoTotal,CodigoSocio,Estado")] Cuenta cuenta)
+        public IActionResult Create(Cuenta cuenta)
         {
-            if (ModelState.IsValid)
+            try
             {
+                cuenta.Estado = 1;
                 _context.Add(cuenta);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            ViewData["CodigoSocio"] = new SelectList(_context.Socio, "Cedula", "Cedula", cuenta.CodigoSocio);
-            return View(cuenta);
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: Cuentas/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var cuenta = await _context.Cuenta.FindAsync(id);
-            if (cuenta == null)
-            {
-                return NotFound();
-            }
-            ViewData["CodigoSocio"] = new SelectList(_context.Socio, "Cedula", "Cedula", cuenta.CodigoSocio);
+            Cuenta cuenta = _context.Cuenta.Where(x => x.Numero == id).FirstOrDefault();
+            ViewData["CodigoSocio"] = new SelectList(_context.Socio, "Cedula", "Cedula");
             return View(cuenta);
         }
 
         // POST: Cuentas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Numero,SaldoTotal,CodigoSocio,Estado")] Cuenta cuenta)

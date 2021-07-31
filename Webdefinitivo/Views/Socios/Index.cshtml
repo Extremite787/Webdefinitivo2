@@ -56,20 +56,15 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Cedula }, new
-               { onclick = "return confirm('Esta seguro que quieres editar?');" }) |
-                @Html.ActionLink("Details", "Details", new { Codigo = item.Cedula }, new { onclick = "return confirm('Esta seguro que quieres ver los detalles?');" }) |
-
+                <a asp-action="Edit" asp-route-id="@item.Cedula">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Cedula">Details</a> |
                 @if (item.Estado == 1)
                 {
-                    @Html.ActionLink("Desactivar", "Desactivar", new { id = item.Cedula },
-               new { onclick = "return confirm('Esta seguro que quieres desactivar?');" })
-
+                    <a asp-action="Desactivar" asp-route-id="@item.Cedula">Desactivar</a>
                 }
                 else
                 {
-                    @Html.ActionLink("Activar", "Activar", new { id = item.Cedula },
-               new { onclick = "return confirm('Esta seguro que quieres activar?');" })
+                    <a asp-action="Activar" asp-route-id="@item.Cedula">Activar</a>
 
                 }
             </td>

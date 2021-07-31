@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Webdefinitivo.Models.Cuenta>
+﻿@model List<Webdefinitivo.Models.Cuenta>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SaldoTotal)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SaldoTotal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Estado)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Estado)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CodigoSocioNavigation)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().CodigoSocioNavigation)
             </th>
             <th></th>
         </tr>

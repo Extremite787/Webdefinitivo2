@@ -41,8 +41,6 @@ namespace Webdefinitivo.Controllers
         }
 
         // POST: Socios/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Socio socio)
@@ -54,7 +52,7 @@ namespace Webdefinitivo.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch //(Exception)
             {
                 return View(socio);
             }
@@ -62,18 +60,9 @@ namespace Webdefinitivo.Controllers
         }
 
         // GET: Socios/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return NotFound();
-            }
-
-            var socio = await _context.Socio.FindAsync(id);
-            if (socio == null)
-            {
-                return NotFound();
-            }
+            Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
             return View(socio);
         }
 
@@ -90,82 +79,27 @@ namespace Webdefinitivo.Controllers
             {
                 _context.Update(socio);
                 _context.SaveChanges();
+                return RedirectToAction("Index");
             }
             catch (Exception)
             {
-
                 return View(socio);
             }
-            return RedirectToAction("Index");
-        }
-
-        // GET: Socios/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                return NotFound();
-            }
-
-            var socio = await _context.Socio
-                .FirstOrDefaultAsync(m => m.Cedula == id);
-            if (socio == null)
-            {
-                return NotFound();
-            }
-
-            return View(socio);
-        }
-
-        // POST: Socios/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var socio = await _context.Socio.FindAsync(id);
-            _context.Socio.Remove(socio);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool SocioExists(string id)
-        {
-            return _context.Socio.Any(e => e.Cedula == id);
         }
         public IActionResult Desactivar(string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return RedirectToAction("Index");
             Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
-            try
-            {
-                socio.Estado = 0;
-                _context.Update(socio);
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index");
-            }
-
+            socio.Estado = 0;
+            _context.Update(socio);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
         public IActionResult Activar(string id)
         {
-            if (string.IsNullOrEmpty(id))
-                return RedirectToAction("Index");
             Socio socio = _context.Socio.Where(x => x.Cedula == id).FirstOrDefault();
-            try
-            {
-                socio.Estado = 1;
-                _context.Update(socio);
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                return RedirectToAction("Index");
-            }
-
+            socio.Estado = 1;
+            _context.Update(socio);
+            _context.SaveChanges();
             return RedirectToAction("Index");
         }
     }
